@@ -1,9 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using ProtonMail.Infrastructure;
 using System;
 using System.Configuration;
-using System.Text;
 
 namespace ProtonMail.Utilities
 {

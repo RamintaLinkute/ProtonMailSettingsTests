@@ -8,7 +8,7 @@ Tutorial: Open a project from a repo
 * On the start window, choose Clone or check out code.
 * Enter or type the repository location, and then choose Clone. Visual Studio opens the project from the repo.
 
-Tutorial: Open Test Explorer if Test Exploreris not visible
+Tutorial: Open Test Explorer if Test Explorer is not visible
 * Choose Test on the Visual Studio menu
 * Choose Test Explorer
 

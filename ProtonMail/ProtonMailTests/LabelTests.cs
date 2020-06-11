@@ -4,8 +4,7 @@ using ProtonMail.ProtonMailPages;
 using ProtonMail.Utilities;
 
 namespace ProtonMail.ProtonMailTests
-{
-    
+{ 
     public class LabelTests : TestBase
     {
         private LoginPage _loginPage;
@@ -33,24 +32,28 @@ namespace ProtonMail.ProtonMailTests
         public void CreateAndEditLabel()
         {
             _foldersAndLabelsPage.CreateNewLabel(newLabelName)
-                .VerifyLastLabel(newLabelName);
-            _foldersAndLabelsPage.ChangeLabelName(editedLabelName)
-                .VerifyLastLabel(editedLabelName);
-            _foldersAndLabelsPage.DeleteAllLabels();
+                .VerifyLastLabelName(newLabelName)
+                .ChangeLabelName(editedLabelName)
+                .VerifyLastLabelName(editedLabelName)
+                .DeleteAllLabels();
         }
 
         [Test]
         public void LabelLimits()
         {
-            _foldersAndLabelsPage.CreateMaxLabelsAndCheckLimitMessage(20);
-            _foldersAndLabelsPage.DeleteAllLabels();
+            _foldersAndLabelsPage.CreateMaxLabels(20);
+            Assert.IsTrue(_foldersAndLabelsPage.AssertLimitAlertWarningAppears(), "Alert is not shown");
+            _foldersAndLabelsPage.CloseModal()
+                .DeleteAllLabels();
         }
 
         [Test]
         public void LabelWithExistingName()
         {
-            _foldersAndLabelsPage.CreateLabelsWithSameNameAndCheckAlert(newLabelName);
-            _foldersAndLabelsPage.DeleteAllLabels();
+            _foldersAndLabelsPage.CreateLabelsWithSameName(newLabelName);
+            Assert.IsTrue(_foldersAndLabelsPage.AssertSameNameAlertWarningAppears(), "Alert is not shown");
+            _foldersAndLabelsPage.CloseModal()
+                .DeleteAllLabels();
         }
 
         [OneTimeTearDown]

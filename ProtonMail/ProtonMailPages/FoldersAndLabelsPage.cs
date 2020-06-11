@@ -1,12 +1,9 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using ProtonMail.Infrastructure;
 using ProtonMail.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace ProtonMail.ProtonMailPages
 {
@@ -21,9 +18,9 @@ namespace ProtonMail.ProtonMailPages
         public IWebElement SaveButton => _driver.FindElement(By.XPath("//button[contains(text(),'Save')]"));
         public IWebElement EditLastFolderButton => _driver.FindElement(By.XPath("(//section[@data-target-id='folderlist']//button[text()='Edit'])[last()]"));
         public IWebElement LastFolder => _driver.FindElement(By.XPath("(//section[@data-target-id='folderlist']//li)[last()]"));
-        public IList<IWebElement> FolderActionDropDown => _driver.FindElements(By.CssSelector("[data-target-id='folderlist'] [data-test-id='dropdown:open']"));  
+        public IList<IWebElement> FolderActionDropDown => _driver.FindElements(By.CssSelector("[data-target-id='folderlist'] [data-test-id='dropdown:open']"));
         public IList<IWebElement> FoldersList => _driver.FindElements(By.XPath("//section[@data-target-id='folderlist']//li"));
-        
+
         //labels elements
         public IList<IWebElement> LabelsList => _driver.FindElements(By.XPath("//section[@data-target-id='labellist']//tbody/tr"));
         public IWebElement AddLabelButton => _driver.FindElement(By.XPath("//button[contains(text(),'Add label')]"));
@@ -39,14 +36,13 @@ namespace ProtonMail.ProtonMailPages
         public IWebElement CancelButton => _driver.FindElement(By.XPath("//button[text()='Cancel']"));
         public IWebElement SameNameAlert => _driver.FindElement(By.XPath("//div[contains(@class,'notifications-container')]/div[text() = 'A label or folder with this name already exists']"));
 
-
         public FoldersAndLabelsPage CreateNewFolder(string folderName)
         {
             WaitUtils.WaitUntilVisible(AddFolderButton, _driver);
             AddFolderButton.Click();
             WaitUtils.WaitUntilVisible(NameInput, _driver);
             NameInput.SendKeys(folderName);
-            SaveButton.Click();            
+            SaveButton.Click();
             return this;
         }
 
@@ -69,7 +65,7 @@ namespace ProtonMail.ProtonMailPages
             return this;
         }
 
-        public FoldersAndLabelsPage CreateMaxFolderAndCheckLimitMessage(int folderLimit)
+        public FoldersAndLabelsPage CreateMaxFolders(int folderLimit)
         {
             int i = 0;
             while (i < folderLimit)
@@ -78,9 +74,18 @@ namespace ProtonMail.ProtonMailPages
                 WaitUtils.WaitUntilInvisible(NameInput, _driver);
                 i++;
             }
-            
             CreateNewFolder(Convert.ToString(i));
+            return this;
+        }
+
+        public bool AssertLimitAlertWarningAppears()
+        {
             WaitUtils.WaitUntilVisible(LimitAlert, _driver);
+            return LimitAlert.Displayed;
+        }
+
+        public FoldersAndLabelsPage CloseModal()
+        {
             CancelButton.Click();
             return this;
         }
@@ -107,14 +112,18 @@ namespace ProtonMail.ProtonMailPages
             return this;
         }
 
-        public FoldersAndLabelsPage CreateFoldersWithSameNameAndCheckAlert(string folderName)
+        public FoldersAndLabelsPage CreateFoldersWithSameName(string folderName)
         {
             CreateNewFolder(folderName);
             WaitUtils.WaitUntilInvisible(NameInput, _driver);
             CreateNewFolder(folderName);
-            WaitUtils.WaitUntilVisible(SameNameAlert, _driver);
-            CancelButton.Click();
             return this;
+        }
+
+        public bool AssertSameNameAlertWarningAppears()
+        {
+            WaitUtils.WaitUntilVisible(SameNameAlert, _driver);
+            return SameNameAlert.Displayed;
         }
 
         public FoldersAndLabelsPage DeleteAllLabels()
@@ -149,7 +158,7 @@ namespace ProtonMail.ProtonMailPages
             return this;
         }
 
-        public FoldersAndLabelsPage CreateMaxLabelsAndCheckLimitMessage(int folderLimit)
+        public FoldersAndLabelsPage CreateMaxLabels(int folderLimit)
         {
             int i = 0;
             while (i < folderLimit)
@@ -159,12 +168,10 @@ namespace ProtonMail.ProtonMailPages
                 i++;
             }
             CreateNewLabel(Convert.ToString(i));
-            WaitUtils.WaitUntilVisible(LimitAlert, _driver);
-            CancelButton.Click();
             return this;
         }
 
-        public FoldersAndLabelsPage VerifyLastLabel(string labelName)
+        public FoldersAndLabelsPage VerifyLastLabelName(string labelName)
         {
             WaitUtils.WaitUntilInvisible(NameInput, _driver);
             var LastLabelText = LastLabel.Text;
@@ -183,13 +190,11 @@ namespace ProtonMail.ProtonMailPages
             return this;
         }
 
-        public FoldersAndLabelsPage CreateLabelsWithSameNameAndCheckAlert(string labelName)
+        public FoldersAndLabelsPage CreateLabelsWithSameName(string labelName)
         {
             CreateNewLabel(labelName);
             WaitUtils.WaitUntilInvisible(NameInput, _driver);
             CreateNewLabel(labelName);
-            WaitUtils.WaitUntilVisible(SameNameAlert, _driver);
-            CancelButton.Click();
             return this;
         }
     }

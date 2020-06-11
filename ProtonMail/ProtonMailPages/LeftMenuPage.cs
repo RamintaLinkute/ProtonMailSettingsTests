@@ -1,8 +1,5 @@
 ﻿using OpenQA.Selenium;
 using ProtonMail.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ProtonMail.ProtonMailPages
 {

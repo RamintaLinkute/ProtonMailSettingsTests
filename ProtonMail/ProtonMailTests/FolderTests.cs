@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using ProtonMail.Infrastructure;
 using ProtonMail.ProtonMailPages;
-using System;
 
 namespace ProtonMail.ProtonMailTests
 {
@@ -30,31 +29,36 @@ namespace ProtonMail.ProtonMailTests
 
         [Test]
         public void CreateAndEditFolder()
-        {   
-            _foldersAndLabelsPage.CreateNewFolder(newFolderName)
-                .VerifyLastFolder(newFolderName);
-            _foldersAndLabelsPage.ChangeFolderName(editedFolderName)
-                .VerifyLastFolder(editedFolderName);
-            _foldersAndLabelsPage.DeleteAllFolders();
+        {
+            _foldersAndLabelsPage
+                .CreateNewFolder(newFolderName)
+                .VerifyLastFolder(newFolderName)
+                .ChangeFolderName(editedFolderName)
+                .VerifyLastFolder(editedFolderName)
+                .DeleteAllFolders();
         }
 
         [Test]
         public void FolderLimits()
         {
-            _foldersAndLabelsPage.CreateMaxFolderAndCheckLimitMessage(3);
-            _foldersAndLabelsPage.DeleteAllFolders();
+            _foldersAndLabelsPage.CreateMaxFolders(3);
+            Assert.IsTrue(_foldersAndLabelsPage.AssertLimitAlertWarningAppears(), "Alert is not shown");
+            _foldersAndLabelsPage.CloseModal()
+                .DeleteAllFolders();
         }
 
         [Test]
         public void FolderWithExistingName()
         {
-            _foldersAndLabelsPage.CreateFoldersWithSameNameAndCheckAlert(newFolderName);
-            _foldersAndLabelsPage.DeleteAllFolders();
+            _foldersAndLabelsPage.CreateFoldersWithSameName(newFolderName);
+            Assert.IsTrue(_foldersAndLabelsPage.AssertSameNameAlertWarningAppears(), "Alert is not shown");
+            _foldersAndLabelsPage.CloseModal()
+                .DeleteAllFolders();
         }
 
         [OneTimeTearDown]
         public void AfterTest()
-        {          
+        {
             Driver.Close();
         }
     }

@@ -2,7 +2,6 @@
 using ProtonMail.Infrastructure;
 using ProtonMail.Utilities;
 using System.Configuration;
-using System.Threading;
 
 namespace ProtonMail.ProtonMailPages
 {
@@ -17,13 +16,15 @@ namespace ProtonMail.ProtonMailPages
         public IWebElement LoginButton => _driver.FindElement(By.Id("login_btn"));
         public IWebElement ProtonLoader => _driver.FindElement(By.Id("pm_loading"));
         public IWebElement AtomLoader => _driver.FindElement(By.Id("pm_slow"));
+        public IWebElement AnimationLoader => _driver.FindElement(By.ClassName("loadingAnimation"));
 
         public LoginPage NavigateToProtonMailLoginPage()
         {
             var url = ConfigurationManager.AppSettings["ApplicationBaseUrl"];
             _driver.Manage().Window.Maximize();
             _driver.Navigate().GoToUrl(url);
-            WaitUtils.WaitUntilInvisible(AtomLoader, _driver);
+            //WaitUtils.WaitUntilInvisible(AtomLoader, _driver);
+            WaitUtils.WaitUntilInvisible(AnimationLoader, _driver);
             return this;
         }
 
